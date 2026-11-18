@@ -59,3 +59,26 @@ function toggleRule(element){
 }
 renderProducts();
 document.getElementById('dialog').addEventListener('click',function(event){if(event.target===this)closeDialog();});
+// Закрытие окна по Escape и возврат фокуса
+document.addEventListener('keydown', function(event) {
+  var dialog = document.getElementById('dialog');
+  if (event.key === 'Escape' && dialog.classList.contains('visible')) {
+    closeDialog();
+  }
+});
+
+// Сохранение фокуса перед открытием окна (чтобы вернуть его потом)
+var lastFocusedElement = null;
+var originalOpenDialog = openDialog;
+openDialog = function(title, text) {
+  lastFocusedElement = document.activeElement;
+  originalOpenDialog(title, text);
+};
+
+var originalCloseDialog = closeDialog;
+closeDialog = function() {
+  document.getElementById('dialog').classList.remove('visible');
+  if (lastFocusedElement) {
+    lastFocusedElement.focus();
+  }
+};
